@@ -292,6 +292,15 @@ class Attribute<T> {
   String toString() {
     return 'Attribute{key: $key, scope: $scope, value: $value}';
   }
+
+  // Editable attribute
+  static const editable = Attribute<bool>('editable', AttributeScope.inline);
+  
+  // Variable ID attribute
+  static const variableId = Attribute<String>('_id', AttributeScope.inline, true);
+  
+  // Variable name attribute
+  static const variableName = Attribute<String>('variableName', AttributeScope.inline, true);
 }
 
 class BoldAttribute extends Attribute<bool> {

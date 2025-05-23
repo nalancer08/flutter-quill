@@ -278,6 +278,22 @@ class QuillController extends ChangeNotifier {
       return;
     }
 
+    // Check if we're trying to edit a non-editable node
+    final leaf = queryNode(index);
+    if (leaf != null && 
+        leaf.style.attributes[Attribute.editable.key]?.value == false) {
+      // If trying to delete part of a non-editable node, delete the whole node
+      if (len > 0) {
+        final nodeLength = leaf.length;
+        final nodeStart = index - (index - leaf.offset);
+        len = nodeLength;
+        index = nodeStart;
+      } else {
+        // If trying to insert into a non-editable node, prevent it
+        return;
+      }
+    }
+
     Delta? delta;
     Style? style;
     if (len > 0 || data is! String || data.isNotEmpty) {
@@ -731,5 +747,73 @@ class QuillController extends ChangeNotifier {
       sb.write(text[i]);
     }
     return sb.toString();
+  }
+
+  // Add method to handle clicks on non-editable nodes
+  void handleNonEditableNodeTap(int offset) {
+    final leaf = queryNode(offset);
+    if (leaf != null && 
+        leaf.style.attributes[Attribute.editable.key]?.value == false) {
+      // Get the node's text content
+      final text = leaf.toPlainText();
+      // Get the node's start position
+      final nodeStart = offset - (offset - leaf.offset);
+      // Get the node's length
+      final nodeLength = leaf.length;
+      
+      // Get variable ID and name if they exist
+      final variableId = leaf.style.attributes[Attribute.variableId.key]?.value as String?;
+      final variableName = leaf.style.attributes[Attribute.variableName.key]?.value as String?;
+      
+      // Call the configured callback if available
+      config.onNonEditableNodeTap?.call(text, nodeStart, nodeLength, variableId, variableName);
+      
+      // Notify listeners about the click on non-editable text
+      notifyListeners();
+    }
+  }
+
+  /// Deletes a non-editable node at the given offset if it exists
+  /// Returns true if a node was deleted, false otherwise
+  bool deleteNonEditableNode(int offset) {
+    final leaf = queryNode(offset);
+    if (leaf != null && 
+        leaf.style.attributes[Attribute.editable.key]?.value == false) {
+      // Get the node's start position and length
+      final nodeStart = offset - (offset - leaf.offset);
+      final nodeLength = leaf.length;
+      
+      // Delete the entire node
+      replaceText(nodeStart, nodeLength, '', 
+          TextSelection.collapsed(offset: nodeStart));
+      
+      return true;
+    }
+    return false;
+  }
+
+  /// Deletes a non-editable node by its variable ID
+  /// Returns true if a node was deleted, false if not found
+  bool deleteNonEditableNodeById(String variableId) {
+    // Search through the document for the node with matching ID
+    final length = document.length;
+    var offset = 0;
+    
+    while (offset < length) {
+      final leaf = queryNode(offset);
+      if (leaf != null) {
+        final leafVariableId = leaf.style.attributes[Attribute.variableId.key]?.value as String?;
+        if (leafVariableId == variableId && 
+            leaf.style.attributes[Attribute.editable.key]?.value == false) {
+          // Found the node, delete it
+          return deleteNonEditableNode(offset);
+        }
+        offset += leaf.length;
+      } else {
+        offset++;
+      }
+    }
+    
+    return false;
   }
 }

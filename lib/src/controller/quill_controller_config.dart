@@ -1,17 +1,19 @@
-import 'package:meta/meta.dart';
-
-import 'clipboard/quill_clipboard_config.dart';
-
 export 'clipboard/quill_clipboard_config.dart';
 
+/// Configuration for the [QuillController].
 class QuillControllerConfig {
   const QuillControllerConfig({
     this.requireScriptFontFeatures = false,
-    @experimental this.clipboardConfig,
+    this.clipboardConfig = const QuillClipboardConfig(),
+    this.onNonEditableNodeTap,
   });
 
-  @experimental
-  final QuillClipboardConfig? clipboardConfig;
+  /// Configuration for clipboard operations.
+  final QuillClipboardConfig clipboardConfig;
+
+  /// Callback for when a non-editable node is tapped
+  /// Parameters are: text content, start offset, length, variable ID, variable name
+  final void Function(String text, int start, int length, String? variableId, String? variableName)? onNonEditableNodeTap;
 
   /// Render subscript and superscript text using Open Type FontFeatures
   ///

@@ -1,11 +1,11 @@
-name: flutter_quill
-description: "A rich text editor built for Android, iOS, Web, and desktop platforms. It's the WYSIWYG editor and a Quill component for Flutter."
-version: 11.4.1
-homepage: https://github.com/singerdmx/flutter-quill/
-repository: https://github.com/singerdmx/flutter-quill/
-issue_tracker: https://github.com/singerdmx/flutter-quill/issues/
-documentation: https://github.com/singerdmx/flutter-quill/
-topics: [editor, text, rich-text-editor, quill, flutter-quill]
+name: quill_extensable
+description: "A rich text editor for Flutter with support for non-editable nodes, variable IDs, and custom callbacks. An extensible fork of flutter_quill."
+version: 1.0.0
+homepage: https://github.com/nalancer08/quill_extensable
+repository: https://github.com/nalancer08/quill_extensable
+issue_tracker: https://github.com/nalancer08/quill_extensable/issues
+documentation: https://github.com/nalancer08/quill_extensable
+topics: [editor, text, rich-text-editor, quill, flutter-quill, variables, extensible]
 
 screenshots:
   - description: "iOS Light Mode"
@@ -55,18 +55,12 @@ dependencies:
   quill_native_bridge: ^11.0.0
 
 dev_dependencies:
-  flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
-  flutter_quill_test: ^11.1.0
+  flutter_lints: ^5.0.0
   test: ^1.24.3
-
-  # For scripts only
-  yaml_edit: ^2.2.1
-  yaml: ^3.1.2
-  http: ^1.2.1
-
   path: any
+
 flutter:
   uses-material-design: true
   generate: true
