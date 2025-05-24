@@ -1,31 +1,17 @@
-import 'package:flutter_quill_example/assets.dart';
-
 const kQuillDefaultSample = [
   {
-    'insert': {'image': kScreenshot2},
-    'attributes': {
-      'width': '100',
-      'height': '100',
-      'style': 'width:500px; height:350px;'
+    'insert': 'Flutter Quill',
+    "attributes": {
+      "editable": false,
+      "_id": "flutter_quill_1",
+      " variableName": "Flutter Quill Title"
     }
   },
-  {'insert': 'Flutter Quill'},
   {
     'attributes': {'header': 1},
     'insert': '\n'
   },
-  {
-    'insert': {
-      'video':
-          'https://www.youtube.com/watch?v=V4hgdKhIqtc&list=PLbhaS_83B97s78HsDTtplRTEhcFsqSqIK&index=1'
-    }
-  },
-  {
-    'insert': {
-      'video':
-          'https://user-images.githubusercontent.com/122956/126238875-22e42501-ad41-4266-b1d6-3f89b5e3b79b.mp4'
-    }
-  },
+  {'insert': '\n\n\n\n'},
   {'insert': '\nRich text editor for Flutter'},
   {
     'attributes': {'header': 2},

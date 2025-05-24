@@ -293,14 +293,14 @@ class Attribute<T> {
     return 'Attribute{key: $key, scope: $scope, value: $value}';
   }
 
-  // Editable attribute
-  static const editable = Attribute<bool>('editable', AttributeScope.inline);
+  // Editable attribute with default value false
+  static const editable = Attribute<bool>('editable', AttributeScope.inline, false);
   
-  // Variable ID attribute
-  static const variableId = Attribute<String>('_id', AttributeScope.inline, true);
+  // Variable ID attribute with null default value
+  static const variableId = Attribute<String?>('_id', AttributeScope.inline, null);
   
-  // Variable name attribute
-  static const variableName = Attribute<String>('variableName', AttributeScope.inline, true);
+  // Variable name attribute with null default value
+  static const variableName = Attribute<String?>('variableName', AttributeScope.inline, null);
 }
 
 class BoldAttribute extends Attribute<bool> {

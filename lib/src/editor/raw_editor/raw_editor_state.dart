@@ -1298,16 +1298,16 @@ class QuillRawEditorState extends EditorState
   bool get shareEnabled => false;
 
   void _handleTapDown(TapDownDetails details) {
-    _controller?.hideToolbar();
+    _selectionOverlay?.hideToolbar();
     final globalPosition = details.globalPosition;
-    final localPosition = renderEditor.getLocalRectForPosition(globalPosition);
+    final localPosition = renderEditor.globalToLocal(globalPosition);
     final position = renderEditor.getPositionForOffset(localPosition);
     
     // Check if tapped on non-editable node
     controller.handleNonEditableNodeTap(position.offset);
-    
-    // Continue with normal tap handling
-    _textSelectionGestureDetector.handleTapDown(details);
-    _startOrEndSelectionHistory();
+  }
+
+  void _startOrEndSelectionHistory() {
+    // No-op for now since we don't need selection history
   }
 }

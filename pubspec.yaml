@@ -1,4 +1,4 @@
-name: quill_extensable
+name: flutter_quill
 description: "A rich text editor for Flutter with support for non-editable nodes, variable IDs, and custom callbacks. An extensible fork of flutter_quill."
 version: 1.0.0
 homepage: https://github.com/nalancer08/quill_extensable

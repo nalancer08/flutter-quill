@@ -2,7 +2,7 @@
 
 import 'dart:io';
 
-import 'package:yaml_edit/yaml_edit.dart';
+//import 'package:yaml_edit/yaml_edit.dart';
 
 /// Update the version in `pubspec.yaml` of a package.
 Future<void> updatePubspecVersion({
@@ -35,6 +35,6 @@ void _updatePubspecYamlFile({
   required String newVersion,
 }) {
   final yaml = pubspecFile.readAsStringSync();
-  final yamlEditor = YamlEditor(yaml)..update(['version'], newVersion);
-  pubspecFile.writeAsStringSync(yamlEditor.toString());
+  //final yamlEditor = YamlEditor(yaml)..update(['version'], newVersion);
+  //pubspecFile.writeAsStringSync(yamlEditor.toString());
 }

@@ -19,7 +19,6 @@ import '../editor/config/editor_config.dart';
 import '../editor/raw_editor/raw_editor_state.dart';
 import '../editor_toolbar_controller_shared/clipboard/clipboard_service_provider.dart';
 import 'clipboard/quill_controller_paste.dart';
-import 'clipboard/quill_controller_rich_paste.dart';
 import 'quill_controller_config.dart';
 
 typedef ReplaceTextCallback = bool Function(int index, int len, Object? data);
@@ -280,7 +279,7 @@ class QuillController extends ChangeNotifier {
 
     // Check if we're trying to edit a non-editable node
     final leaf = queryNode(index);
-    if (leaf != null && 
+    if (leaf != null &&
         leaf.style.attributes[Attribute.editable.key]?.value == false) {
       // If trying to delete part of a non-editable node, delete the whole node
       if (len > 0) {
@@ -582,60 +581,7 @@ class QuillController extends ChangeNotifier {
       return true;
     }
 
-    const enableExternalRichPasteDefault = true;
-    if (clipboardConfig?.enableExternalRichPaste ??
-        enableExternalRichPasteDefault) {
-      final pasteHtmlSuccess = await pasteHTML();
-      if (pasteHtmlSuccess) {
-        updateEditor?.call();
-        return true;
-      }
-
-      final pasteMarkdownSuccess = await pasteMarkdown();
-      if (pasteMarkdownSuccess) {
-        updateEditor?.call();
-        return true;
-      }
-    }
-
     final clipboardService = ClipboardServiceProvider.instance;
-
-    final onImagePaste = clipboardConfig?.onImagePaste;
-    if (onImagePaste != null) {
-      final imageBytes = await clipboardService.getImageFile();
-
-      if (imageBytes != null) {
-        final imageUrl = await onImagePaste(imageBytes);
-        if (imageUrl != null) {
-          replaceText(
-            plainTextEditingValue.selection.end,
-            0,
-            BlockEmbed.image(imageUrl),
-            null,
-          );
-          updateEditor?.call();
-          return true;
-        }
-      }
-    }
-
-    final onGifPaste = clipboardConfig?.onGifPaste;
-    if (onGifPaste != null) {
-      final gifBytes = await clipboardService.getGifFile();
-      if (gifBytes != null) {
-        final gifUrl = await onGifPaste(gifBytes);
-        if (gifUrl != null) {
-          replaceText(
-            plainTextEditingValue.selection.end,
-            0,
-            BlockEmbed.image(gifUrl),
-            null,
-          );
-          updateEditor?.call();
-          return true;
-        }
-      }
-    }
 
     // Only process plain text if no image/gif was pasted.
     // Snapshot the input before using `await`.
@@ -646,14 +592,6 @@ class QuillController extends ChangeNotifier {
       final plainTextToPaste = await getTextToPaste(plainText);
       if (pastePlainTextOrDelta(plainTextToPaste,
           pastePlainText: _pastePlainText, pasteDelta: _pasteDelta)) {
-        updateEditor?.call();
-        return true;
-      }
-    }
-
-    final onUnprocessedPaste = clipboardConfig?.onUnprocessedPaste;
-    if (onUnprocessedPaste != null) {
-      if (await onUnprocessedPaste()) {
         updateEditor?.call();
         return true;
       }
@@ -752,7 +690,7 @@ class QuillController extends ChangeNotifier {
   // Add method to handle clicks on non-editable nodes
   void handleNonEditableNodeTap(int offset) {
     final leaf = queryNode(offset);
-    if (leaf != null && 
+    if (leaf != null &&
         leaf.style.attributes[Attribute.editable.key]?.value == false) {
       // Get the node's text content
       final text = leaf.toPlainText();
@@ -760,14 +698,17 @@ class QuillController extends ChangeNotifier {
       final nodeStart = offset - (offset - leaf.offset);
       // Get the node's length
       final nodeLength = leaf.length;
-      
+
       // Get variable ID and name if they exist
-      final variableId = leaf.style.attributes[Attribute.variableId.key]?.value as String?;
-      final variableName = leaf.style.attributes[Attribute.variableName.key]?.value as String?;
-      
+      final variableId =
+          leaf.style.attributes[Attribute.variableId.key]?.value as String?;
+      final variableName =
+          leaf.style.attributes[Attribute.variableName.key]?.value as String?;
+
       // Call the configured callback if available
-      config.onNonEditableNodeTap?.call(text, nodeStart, nodeLength, variableId, variableName);
-      
+      config.onNonEditableNodeTap
+          ?.call(text, nodeStart, nodeLength, variableId, variableName);
+
       // Notify listeners about the click on non-editable text
       notifyListeners();
     }
@@ -777,16 +718,16 @@ class QuillController extends ChangeNotifier {
   /// Returns true if a node was deleted, false otherwise
   bool deleteNonEditableNode(int offset) {
     final leaf = queryNode(offset);
-    if (leaf != null && 
+    if (leaf != null &&
         leaf.style.attributes[Attribute.editable.key]?.value == false) {
       // Get the node's start position and length
       final nodeStart = offset - (offset - leaf.offset);
       final nodeLength = leaf.length;
-      
+
       // Delete the entire node
-      replaceText(nodeStart, nodeLength, '', 
+      replaceText(nodeStart, nodeLength, '',
           TextSelection.collapsed(offset: nodeStart));
-      
+
       return true;
     }
     return false;
@@ -798,12 +739,13 @@ class QuillController extends ChangeNotifier {
     // Search through the document for the node with matching ID
     final length = document.length;
     var offset = 0;
-    
+
     while (offset < length) {
       final leaf = queryNode(offset);
       if (leaf != null) {
-        final leafVariableId = leaf.style.attributes[Attribute.variableId.key]?.value as String?;
-        if (leafVariableId == variableId && 
+        final leafVariableId =
+            leaf.style.attributes[Attribute.variableId.key]?.value as String?;
+        if (leafVariableId == variableId &&
             leaf.style.attributes[Attribute.editable.key]?.value == false) {
           // Found the node, delete it
           return deleteNonEditableNode(offset);
@@ -813,7 +755,7 @@ class QuillController extends ChangeNotifier {
         offset++;
       }
     }
-    
+
     return false;
   }
 }

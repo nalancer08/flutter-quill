@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 
 /// Custom toolbar that uses the buttons of [`flutter_quill`](https://pub.dev/packages/flutter_quill).
 ///
@@ -42,15 +41,6 @@ class CustomToolbar extends StatelessWidget {
             controller: controller,
           ),
           const VerticalDivider(),
-          QuillToolbarImageButton(
-            controller: controller,
-          ),
-          QuillToolbarCameraButton(
-            controller: controller,
-          ),
-          QuillToolbarVideoButton(
-            controller: controller,
-          ),
           const VerticalDivider(),
           QuillToolbarColorButton(
             controller: controller,
